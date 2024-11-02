@@ -1,3 +1,3 @@
 function tackle
-    fish --command "_tackle_inner $argv"
+    fish --init-command "_tackle_inner $argv"
 end
