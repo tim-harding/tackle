@@ -13,11 +13,7 @@ function _tackle_inner
         exit
     end
 
-    for key in \$ \\ \* \? \~ \# \( \) \{ \} \[ \] \< \> \& \| \; \" \' \a \e \f \n \r \t \v
-        bind "$key" "$_flag_update $(string escape $key)"
-    end
-
-    for key in a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \ca \cb \cc \cd \ce \cf \cg \ch \ci \cj \ck \cl \cm \cn \co \cp \cq \cr \cs \ct \cu \cv \cw \cx \cy \cz
+    for key in a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \ca \cb \cc \cd \ce \cf \cg \ch \ci \cj \ck \cl \cm \cn \co \cp \cq \cr \cs \ct \cu \cv \cw \cx \cy \cz \$ \\ \* \? \~ \# \( \) \{ \} \[ \] \< \> \& \| \; \" \'
         bind $key "$_flag_update $key"
     end
 
@@ -26,6 +22,10 @@ function _tackle_inner
     bind \e\[A "$_flag_update up"
     bind \e\[B "$_flag_update down"
     bind " " "$_flag_update space"
+    bind \r "$_flag_update enter"
+    bind \t "$_flag_update tab"
+    bind \e "$_flag_update escape"
+    bind \x7F "$_flag_update backspace"
     bind \cC exit
 
     set -g _tackle_epoch 0
@@ -35,15 +35,20 @@ function _tackle_inner
         end
     end
 
-    function _tackle_update_view --on-variable _tackle_epoch --inherit-variable _flag_view
+    function _tackle_view --on-variable _tackle_epoch --inherit-variable _flag_view
         _tackle_erase to-end
-        $_flag_view
-        _tackle_cursor restore
+        set lines (string split \n ($_flag_view))
+        for line in $lines
+            echo -e $line
+        end
+        _tackle_cursor up (math 1 + (count lines))
     end
 
-    # TODO: Save cursor to variable so user code doesn't overwrite saved state
-    echo ""
-    _tackle_cursor up
-    _tackle_cursor save
-    _tackle_update_view
+    function _tackle_exit --on-variable _tackle_exit
+        _tackle_cursor show
+        exit $_tackle_exit
+    end
+
+    _tackle_cursor hide
+    _tackle_view
 end
