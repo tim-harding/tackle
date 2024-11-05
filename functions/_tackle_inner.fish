@@ -14,9 +14,9 @@ function _tackle_inner --argument-names fn
         bind $key "_tackle_key $key"
     end
 
-    for key in \ca \cb \cc \cd \ce \cf \cg \ch \ci \cj \ck \cl \cm \cn \co \cp \cq \cr \cs \ct \cu \cv \cw \cx \cy \cz
-        bind $key "_tackle_key $key command"
-    end
+    # for key in \ca \cb \cc \cd \ce \cf \cg \ch \ci \cj \ck \cl \cm \cn \co \cp \cq \cr \cs \ct \cu \cv \cw \cx \cy \cz
+    #     bind $key "_tackle_key $key command"
+    # end
 
     bind \e\[D "_tackle_key left"
     bind \e\[C "_tackle_key right"
@@ -25,9 +25,9 @@ function _tackle_inner --argument-names fn
     bind " " "_tackle_key space"
     bind \r "_tackle_key enter"
     bind \t "_tackle_key tab"
-    bind \e "_tackle_key escape"
     bind \x7F "_tackle_key backspace"
-    bind \cC exit 1
+    bind \e "_tackle_key escape"
+    bind \cC "_tackle_key escape"
 
     _tackle_cursor hide
     while true
@@ -37,22 +37,19 @@ function _tackle_inner --argument-names fn
             set lines ($fn $argv[2..])
         end
 
-        for line in $lines
-            echo -e $line
-        end
+        echo -es (_tackle_cloak show) \
+            (_tackle_cursor line-up 1) \
+            (_tackle_erase to-end) \
+            (set_color normal) \
+            (string join "\n" $lines) \
+            (_tackle_cursor up (count $lines))
 
         if set -q _tackle_exit
             _tackle_cursor show
             exit $_tackle_exit
         end
 
-        _tackle_cursor up (count $lines)
-
         read --prompt "_tackle_cloak hide" input
-        _tackle_cloak show
-        _tackle_cursor line-up 1
-        _tackle_erase to-end
-        set_color normal
     end
 end
 
