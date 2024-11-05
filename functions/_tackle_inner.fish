@@ -32,17 +32,18 @@ function _tackle_inner --argument-names fn
     _tackle_cursor hide
     while true
         if set -q input
+            set compensate (_tackle_cursor up (count $lines)) \
+                (_tackle_cloak show) \
+                (_tackle_cursor line-up 1)
             set lines ($fn $input)
         else
             set lines ($fn $argv[2..])
         end
 
-        echo -es (_tackle_cloak show) \
-            (_tackle_cursor line-up 1) \
+        echo -es $compensate \
             (_tackle_erase to-end) \
             (set_color normal) \
-            (string join "\n" $lines) \
-            (_tackle_cursor up (count $lines))
+            (string join "\n" $lines)
 
         if set -q _tackle_exit
             _tackle_cursor show
