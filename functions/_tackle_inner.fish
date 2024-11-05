@@ -31,7 +31,12 @@ function _tackle_inner --argument-names fn
 
     _tackle_cursor hide
     while true
-        set lines ($fn $input)
+        if set -q input
+            set lines ($fn $input)
+        else
+            set lines ($fn $argv[2..])
+        end
+
         for line in $lines
             echo -e $line
         end
