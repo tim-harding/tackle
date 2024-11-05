@@ -14,10 +14,6 @@ function _tackle_inner --argument-names fn
         bind $key "_tackle_key $key"
     end
 
-    # for key in \ca \cb \cc \cd \ce \cf \cg \ch \ci \cj \ck \cl \cm \cn \co \cp \cq \cr \cs \ct \cu \cv \cw \cx \cy \cz
-    #     bind $key "_tackle_key $key command"
-    # end
-
     bind \e\[D "_tackle_key left"
     bind \e\[C "_tackle_key right"
     bind \e\[A "_tackle_key up"
@@ -27,7 +23,6 @@ function _tackle_inner --argument-names fn
     bind \t "_tackle_key tab"
     bind \x7F "_tackle_key backspace"
     bind \e "_tackle_key escape"
-    bind \cC "_tackle_key escape"
 
     _tackle_cursor hide
     while true
